@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Terima Kasih Sudah Menonton</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .video-background {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center center;
+        z-index: -2;
+        opacity: 0.92;
+      }
+
+      .video-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 15, 15, 0.28);
+        z-index: -1;
+      }
+
+      .hero {
+        background: rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(16px);
+      }
+
+      .bubble-layer {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 0;
+      }
+
+      .bubble {
+        position: absolute;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.7rem 1rem;
+        max-width: 220px;
+        line-height: 1.35;
+        background: #ffffffcc;
+        color: #111;
+        border-radius: 24px;
+        border-top-left-radius: 24px;
+        border-top-right-radius: 24px;
+        border-bottom-left-radius: 24px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        font-size: 0.95rem;
+        letter-spacing: 0.01em;
+        white-space: normal;
+        opacity: 0.98;
+        transform: translateY(100vh);
+        animation: floatUp 14s linear infinite;
+        pointer-events: auto;
+        cursor: pointer;
+        transition: transform 0.2s ease, filter 0.2s ease;
+      }
+
+      .bubble:hover {
+        transform: translateY(100vh) scale(1.02);
+        filter: brightness(1.05);
+      }
+
+      .bubble.right {
+        background: rgba(37, 211, 102, 0.95);
+        color: #ffffff;
+        border-top-right-radius: 4px;
+        border-bottom-left-radius: 24px;
+        border-bottom-right-radius: 24px;
+      }
+
+      .bubble .heart-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.2rem;
+        height: 1.2rem;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.9);
+        color: #ff3b6a;
+        font-size: 0.95rem;
+      }
+
+      .bubble .bubble-photo {
+        width: 40px;
+        height: 40px;
+        border-radius: 14px;
+        object-fit: cover;
+        border: 2px solid rgba(255, 255, 255, 0.85);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      }
+
+      .bubble.right .heart-icon {
+        background: rgba(255, 255, 255, 0.18);
+      }
+
+      .bubble.image-bubble {
+        padding: 0.6rem 0.85rem;
+        gap: 0.55rem;
+      }
+
+      .audio-prompt {
+        position: fixed;
+        bottom: 18px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+        display: none;
+      }
+
+      .audio-prompt button {
+        padding: 0.85rem 1.2rem;
+        border: none;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.92);
+        color: #333;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.16);
+      }
+
+      .audio-prompt.show {
+        display: block;
+      }
+
+      .pop-heart {
+        position: fixed;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        pointer-events: none;
+        font-size: 1.2rem;
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+        animation: popHeart 0.6s ease-out forwards;
+      }
+
+      @keyframes popHeart {
+        0% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -180%) scale(1.5);
+        }
+      }
+
+      .bubble::after {
+        content: "";
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        border-radius: 3px;
+        bottom: 10px;
+        background: inherit;
+      }
+
+      .bubble.left::after {
+        left: -6px;
+        transform: rotate(45deg);
+      }
+
+      .bubble.right::after {
+        right: -6px;
+        transform: rotate(45deg);
+      }
+
+      @keyframes floatUp {
+        0% {
+          transform: translateY(100vh) scale(0.9);
+          opacity: 0.9;
+        }
+        100% {
+          transform: translateY(-120vh) scale(1.05);
+          opacity: 0.05;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .video-background {
+          object-position: center top;
+        }
+
+        .bubble {
+          padding: 0.6rem 0.9rem;
+          max-width: 180px;
+          font-size: 0.85rem;
+        }
+
+        .bubble .bubble-photo {
+          width: 34px;
+          height: 34px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <video class="video-background" autoplay muted loop playsinline>
+      <source src="file:///C:/Users/ASUS/Downloads/WhatsApp%20Video%202026-08-08%20at%2003.16.43.mp4" type="video/mp4" />
+      <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />
+      Video latar tidak didukung oleh browser.
+    </video>
+    <audio id="backgroundAudio" preload="auto" autoplay playsinline>
+      <source src="file:///C:/Users/ASUS/Downloads/WhatsApp%20Video%202026-08-08%20at%2003.42.05.mp4" type="audio/mp4" />
+      Audio tidak didukung oleh browser.
+    </audio>
+    <div class="audio-prompt" id="audioPrompt">
+      <button id="audioPromptBtn">Aktifkan musik latar</button>
+    </div>
+    <div class="video-overlay"></div>
+    <div class="bubble-layer" id="bubbleLayer"></div>
+    <script>
+      const bubbleItems = [
+        { type: "text", content: "i love u" },
+        { type: "text", content: "happy birthday sayangku" },
+        {
+          type: "image",
+          src: "file:///C:/Users/ASUS/Downloads/WhatsApp Image 2026-08-08 at 03.34.33.jpeg",
+          label: "hfiz akan selamanya mencintai wawa",
+        },
+        { type: "text", content: "mwah" },
+        {
+          type: "image",
+          src: "file:///C:/Users/ASUS/Downloads/WhatsApp Image 2026-08-08 at 03.34.33.jpeg",
+          label: "selamanya untuk wawa",
+        },
+      ];
+
+      const bubbleLayer = document.getElementById("bubbleLayer");
+
+      function createBubble(item) {
+        const bubble = document.createElement("span");
+        bubble.className = "bubble";
+
+        if (item.type === "image") {
+          bubble.classList.add("image-bubble");
+          bubble.innerHTML = `
+            <img class="bubble-photo" src="${item.src}" alt="foto sayang" />
+            <span class="bubble-text">${item.label}</span>
+            <span class="heart-icon">❤</span>
+          `;
+        } else {
+          bubble.innerHTML = `
+            <span class="bubble-text">${item.content}</span>
+            <span class="heart-icon">❤</span>
+          `;
+        }
+
+        const side = Math.random() > 0.5 ? "left" : "right";
+        bubble.classList.add(side);
+        bubble.style.left = side === "left" ? `${Math.random() * 35 + 2}%` : `${Math.random() * 35 + 58}%`;
+        bubble.style.animationDuration = `${10 + Math.random() * 7}s`;
+        bubble.style.animationDelay = `${-Math.random() * 12}s`;
+        bubble.style.fontSize = `${0.9 + Math.random() * 0.3}rem`;
+        bubble.addEventListener("click", (event) => {
+          event.stopPropagation();
+          playBackgroundAudio();
+          const rect = bubble.getBoundingClientRect();
+          const pop = document.createElement("span");
+          pop.className = "pop-heart";
+          pop.textContent = "💗";
+          pop.style.left = `${rect.left + rect.width / 2}px`;
+          pop.style.top = `${rect.top + rect.height / 2}px`;
+          document.body.appendChild(pop);
+          setTimeout(() => pop.remove(), 600);
+        });
+        bubbleLayer.appendChild(bubble);
+      }
+
+      function spawnBubbles(count) {
+        for (let i = 0; i < count; i += 1) {
+          const item = bubbleItems[Math.floor(Math.random() * bubbleItems.length)];
+          createBubble(item);
+        }
+      }
+
+      const backgroundAudio = document.getElementById("backgroundAudio");
+      const audioPrompt = document.getElementById("audioPrompt");
+      const audioPromptBtn = document.getElementById("audioPromptBtn");
+      let audioStarted = false;
+
+      function playBackgroundAudio() {
+        if (audioStarted || !backgroundAudio) return;
+        backgroundAudio.volume = 0.7;
+        backgroundAudio.play().then(() => {
+          audioStarted = true;
+          if (audioPrompt) audioPrompt.classList.remove("show");
+        }).catch(() => {
+          audioStarted = false;
+          if (audioPrompt) audioPrompt.classList.add("show");
+        });
+      }
+
+      window.addEventListener("DOMContentLoaded", () => {
+        setTimeout(() => {
+          window.location.href = "happy.html";
+        }, 14000);
+
+        playBackgroundAudio();
+
+        spawnBubbles(24);
+        setInterval(() => {
+          const item = bubbleItems[Math.floor(Math.random() * bubbleItems.length)];
+          createBubble(item);
+          if (bubbleLayer.children.length > 40) {
+            bubbleLayer.removeChild(bubbleLayer.firstChild);
+          }
+        }, 850);
+      });
+
+      if (audioPromptBtn) {
+        audioPromptBtn.addEventListener("click", () => {
+          playBackgroundAudio();
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -3,26 +3,117 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Happy Birthday Sayangku</title>
+    <title>Surprise Ucapan Ultah</title>
     <link rel="stylesheet" href="style.css" />
+    <style>
+      .name-anim {
+        display: inline-block;
+        margin-bottom: 20px;
+        font-size: clamp(1.5rem, 4vw, 2.3rem);
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        background: linear-gradient(90deg, #ff7aa2, #ff3c7b, #ff94b8);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: slideGlow 4s ease-in-out infinite;
+        position: relative;
+      }
+
+      .name-anim::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 12px;
+        box-shadow: 0 0 30px rgba(255, 108, 146, 0.35);
+        opacity: 0.35;
+      }
+
+      @keyframes slideGlow {
+        0%, 100% {
+          text-shadow: 0 0 18px rgba(255, 111, 143, 0.35);
+          transform: translateX(-5px);
+        }
+        50% {
+          text-shadow: 0 0 36px rgba(255, 111, 143, 0.65);
+          transform: translateX(5px);
+        }
+      }
+    </style>
   </head>
   <body>
-    <div class="page countdown-page">
+    <div class="page">
       <div class="hero">
         <div class="hero-inner">
-          <div class="name-anim">happy birthday sayangku</div>
-          <p class="intro">Tekan tombol di bawah untuk memulai hitungan mundur. Setelah selesai, kamu akan melihat momen spesial selanjutnya.</p>
+          <div class="name-anim">Nazwa Azzahra</div>
+          <h1 class="headline">untuk cintaku di hari spesial</h1>
+          <p class="intro" id="typingIntro"></p>
 
-          <div class="button-wrap">
-            <button class="reveal-btn" id="startCountdownBtn">Mulai Hitungan Mundur</button>
+          <div class="hero-grid">
+            <div class="info-box">
+              <strong>Semoga harimu spesial</strong>
+              <span>Semoga senyum dan kebahagiaanmu bertambah hari ini, dan semua impianmu perlahan terwujud.</span>
+            </div>
+
+            <div class="quote-box">
+              "Setiap momen bersamamu adalah hadiah terindah, Nazwa Azzahra. Happy birthday, sayangku!"
+            </div>
           </div>
 
-          <div class="countdown-display" id="countdownDisplay">💖 siap?</div>
-          <p class="small-note">Tekan tombol untuk memulai hitungan mundur.</p>
+          <div class="media-showcase">
+            <div class="media-screen">
+              <div class="media-card active">
+                <div class="media-photo photo-one">
+                  <img src="file:///C:/Users/ASUS/OneDrive/Pictures/20260623_193957000_iOS%20-%20Copy.jpg" alt="Momen spesial" class="media-image" />
+                  <span class="media-tag">foto 01</span>
+                  <strong>momen spesial</strong>
+                </div>
+              </div>
+              <div class="media-card">
+                <div class="media-photo photo-two">
+                  <span class="media-tag">foto 02</span>
+                  <strong>senyum penuh cinta</strong>
+                </div>
+              </div>
+              <div class="media-card">
+                <div class="media-photo photo-three">
+                  <span class="media-tag">foto 03</span>
+                  <strong>hari yang spesial</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="button-wrap">
+            <a class="start-link" href="index.html">Mulai dari halaman hitungan mundur</a>
+          </div>
         </div>
       </div>
+
+      <section class="closing-card">
+        <h2>semoga setiap harimu selalu penuh senyum</h2>
+        <p>terima kasih sudah menjadi bagian dari hari-hari yang paling istimewa dalam hidupku.</p>
+      </section>
+
+      <div class="footer">Dibuat dengan cinta 💕</div>
+      <div class="balloon-layer" aria-hidden="true">
+        <span class="balloon balloon-one"></span>
+        <span class="balloon balloon-two"></span>
+        <span class="balloon balloon-three"></span>
+        <span class="balloon balloon-four"></span>
+      </div>
+      <div class="confetti-layer" aria-hidden="true">
+        <span class="confetti c1"></span>
+        <span class="confetti c2"></span>
+        <span class="confetti c3"></span>
+        <span class="confetti c4"></span>
+        <span class="confetti c5"></span>
+        <span class="confetti c6"></span>
+      </div>
+      <div class="burst-layer" id="burstLayer" aria-hidden="true"></div>
+      <div class="floating-heart" id="floating"></div>
     </div>
 
-    <script src="happy.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>
