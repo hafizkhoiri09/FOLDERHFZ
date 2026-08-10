@@ -206,13 +206,13 @@
     </style>
   </head>
   <body>
-    <video class="video-background" autoplay muted loop playsinline>
-      <source src="./WhatsApp Video 2026-08-07 at 02.31.25.mp4" type="video/mp4" />
+    <video id="pageVideo" class="video-background" autoplay loop playsinline>
+      <source src="file:///C:/Users/ASUS/Downloads/WhatsApp%20Video%202026-08-08%20at%2003.16.43.mp4" type="video/mp4" />
       <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />
       Video latar tidak didukung oleh browser.
     </video>
     <audio id="backgroundAudio" preload="auto" autoplay playsinline>
-      <source src="./audio  .mp4" type="audio/mp4" />
+      <source src="file:///C:/Users/ASUS/Downloads/WhatsApp%20Video%202026-08-08%20at%2003.42.05.mp4" type="audio/mp4" />
       Audio tidak didukung oleh browser.
     </audio>
     <div class="audio-prompt" id="audioPrompt">
@@ -286,6 +286,7 @@
       }
 
       const backgroundAudio = document.getElementById("backgroundAudio");
+      const pageVideo = document.getElementById("pageVideo");
       const audioPrompt = document.getElementById("audioPrompt");
       const audioPromptBtn = document.getElementById("audioPromptBtn");
       let audioStarted = false;
@@ -302,12 +303,20 @@
         });
       }
 
+      function ensureVideoAudio() {
+        if (!pageVideo) return;
+        pageVideo.muted = true;
+        pageVideo.volume = 0;
+        pageVideo.play().catch(() => {});
+      }
+
       window.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => {
           window.location.href = "happy.html";
         }, 14000);
 
         playBackgroundAudio();
+        ensureVideoAudio();
 
         spawnBubbles(24);
         setInterval(() => {
