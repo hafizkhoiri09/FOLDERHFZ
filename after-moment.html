@@ -206,14 +206,11 @@
     </style>
   </head>
   <body>
-    <video id="pageVideo" class="video-background" autoplay loop playsinline>
-      <source src="C:\Users\ASUS\OneDrive\Documents\Desktop\FOLDERHFZ\WhatsApp Video 2026-08-08 at 03.42.05.mp4" type="video/mp4" />
+    <video id="pageVideo" class="video-background" autoplay loop muted playsinline>
+      <source src="WhatsApp Video 2026-08-08 at 03.16.43.mp4" type="video/mp4" />
       Video latar tidak didukung oleh browser.
     </video>
-    <audio id="backgroundAudio" preload="auto" autoplay playsinline>
-      <source src="WhatsApp Video 2026-08-08 at 03.16.43.mp4 type="audio/mp3" />
-      Audio tidak didukung oleh browser.
-    </audio>
+    <audio id="bgMusic" preload="auto" loop playsinline></audio>
     <div class="audio-prompt" id="audioPrompt">
       <button id="audioPromptBtn">Aktifkan musik latar</button>
     </div>
@@ -284,16 +281,34 @@
         }
       }
 
-      const backgroundAudio = document.getElementById("backgroundAudio");
       const pageVideo = document.getElementById("pageVideo");
+      const bgMusic = document.getElementById("bgMusic");
       const audioPrompt = document.getElementById("audioPrompt");
       const audioPromptBtn = document.getElementById("audioPromptBtn");
       let audioStarted = false;
+      let audioContext = null;
+      let ambientInterval = null;
+
+      if (bgMusic) {
+        bgMusic.src = "WhatsApp Video 2026-08-08 at 03.42.05.mp4";
+        bgMusic.muted = false;
+        bgMusic.volume = 0.75;
+      }
 
       function playBackgroundAudio() {
-        if (audioStarted || !backgroundAudio) return;
-        backgroundAudio.volume = 0.7;
-        backgroundAudio.play().then(() => {
+        if (audioStarted || !bgMusic) return;
+
+        const AudioCtor = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtor && !audioContext) {
+          audioContext = new AudioCtor();
+        }
+
+        if (audioContext && audioContext.state === "suspended") {
+          audioContext.resume().catch(() => {});
+        }
+
+        bgMusic.currentTime = 0;
+        bgMusic.play().then(() => {
           audioStarted = true;
           if (audioPrompt) audioPrompt.classList.remove("show");
         }).catch(() => {

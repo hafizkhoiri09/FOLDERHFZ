@@ -495,6 +495,84 @@ body {
   line-height: 1.7;
 }
 
+.balloon-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.balloon {
+  position: absolute;
+  left: var(--x);
+  bottom: -140px;
+  width: var(--size);
+  height: calc(var(--size) * 1.28);
+  border-radius: 50% 50% 48% 48%;
+  box-shadow: inset -14px -14px 18px rgba(0, 0, 0, 0.08), 0 18px 28px rgba(0, 0, 0, 0.08);
+  animation: balloonFloat 12s ease-in infinite;
+  animation-delay: var(--delay);
+  opacity: 0.92;
+}
+
+.balloon::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.52), transparent 48%);
+}
+
+.balloon::after {
+  content: "";
+  position: absolute;
+  width: 2px;
+  height: 70px;
+  left: 50%;
+  top: calc(100% - 12px);
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.65);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+
+.balloon-pink {
+  background: linear-gradient(180deg, #ff8bb7, #ff5f93);
+}
+
+.balloon-yellow {
+  background: linear-gradient(180deg, #ffe99b, #ffd45c);
+}
+
+.balloon-red {
+  background: linear-gradient(180deg, #ff778d, #ef355d);
+}
+
+.balloon-purple {
+  background: linear-gradient(180deg, #d9b8ff, #b78cf2);
+}
+
+.balloon-cyan {
+  background: linear-gradient(180deg, #a6f0ff, #62d3ef);
+}
+
+@keyframes balloonFloat {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(0.96);
+    opacity: 0.9;
+  }
+  20% {
+    transform: translateY(-18vh) rotate(-8deg) scale(1);
+  }
+  50% {
+    transform: translateY(-48vh) rotate(10deg) scale(1.04);
+  }
+  100% {
+    transform: translateY(-110vh) rotate(-12deg) scale(0.92);
+    opacity: 0.5;
+  }
+}
+
 .soft-glow {
   box-shadow: 0 32px 90px rgba(255, 195, 214, 0.22);
 }
