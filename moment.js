@@ -5,21 +5,18 @@ window.addEventListener("DOMContentLoaded", () => {
   if (momentPage) {
     momentPage.classList.add("page-enter");
   }
-});
 
-function goToAnimationPage() {
-  window.location.href = "after-moment.html";
-}
+  if (momentVideo) {
+    momentVideo.muted = true;
+    momentVideo.loop = true;
+    momentVideo.playsInline = true;
+    momentVideo.autoplay = true;
 
-if (momentVideo) {
-  momentVideo.addEventListener("ended", goToAnimationPage);
-  momentVideo.muted = false;
-  momentVideo.volume = 1;
-
-  const playPromise = momentVideo.play();
-  if (playPromise !== undefined) {
-    playPromise.catch(() => {
-      // Autoplay with sound may be blocked by browser policies.
-    });
+    const playPromise = momentVideo.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+      // Browser memblokir autoplay tanpa interaksi; video tetap akan berputar saat user berinteraksi.
+      });
+    }
   }
-}
+});
