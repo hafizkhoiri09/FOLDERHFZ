@@ -8,9 +8,12 @@ window.addEventListener("DOMContentLoaded", () => {
 
   if (momentVideo) {
     momentVideo.muted = true;
-    momentVideo.loop = true;
+    momentVideo.loop = false;
     momentVideo.playsInline = true;
     momentVideo.autoplay = true;
+    momentVideo.addEventListener("ended", () => {
+      window.location.href = "after-moment.html";
+    }, { once: true });
 
     const playPromise = momentVideo.play();
     if (playPromise !== undefined) {
