@@ -11,6 +11,7 @@
         inset: 0;
         width: 100%;
         height: 100%;
+        height: 100dvh;
         object-fit: cover;
         object-position: center center;
         z-index: -2;
@@ -20,7 +21,7 @@
       .video-overlay {
         position: fixed;
         inset: 0;
-        background: rgba(15, 15, 15, 0.28);
+        background: rgba(15, 15, 15, 0.38);
         z-index: -1;
       }
 
@@ -44,7 +45,7 @@
         justify-content: center;
         gap: 0.5rem;
         padding: 0.7rem 1rem;
-        max-width: 220px;
+        max-width: min(220px, calc(100vw - 32px));
         line-height: 1.35;
         background: #ffffffcc;
         color: #111;
@@ -62,6 +63,7 @@
         pointer-events: auto;
         cursor: pointer;
         transition: transform 0.2s ease, filter 0.2s ease;
+        left: clamp(12px, var(--bubble-x), calc(100vw - 100% - 12px));
       }
 
       .bubble:hover {
@@ -109,26 +111,39 @@
 
       .audio-prompt {
         position: fixed;
-        bottom: 18px;
+        bottom: max(16px, env(safe-area-inset-bottom));
         left: 50%;
         transform: translateX(-50%);
         z-index: 10;
-        display: none;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: min(440px, calc(100vw - 24px));
+        padding: 8px 14px;
+        border: 1px solid rgba(255, 255, 255, 0.72);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.94);
+        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.24);
+        backdrop-filter: blur(12px);
       }
 
       .audio-prompt button {
-        padding: 0.85rem 1.2rem;
+        flex: 0 0 auto;
+        min-height: 44px;
+        padding: 0.7rem 1rem;
         border: none;
         border-radius: 999px;
-        background: rgba(255, 255, 255, 0.92);
-        color: #333;
+        background: #ff4f7d;
+        color: #fff;
         font-weight: 700;
         cursor: pointer;
-        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.16);
+        touch-action: manipulation;
       }
 
-      .audio-prompt.show {
-        display: block;
+      .audio-status {
+        color: #4a3540;
+        font-size: 0.88rem;
+        line-height: 1.35;
       }
 
       .pop-heart {
@@ -194,13 +209,22 @@
 
         .bubble {
           padding: 0.6rem 0.9rem;
-          max-width: 180px;
+          max-width: min(180px, calc(100vw - 32px));
           font-size: 0.85rem;
         }
 
         .bubble .bubble-photo {
           width: 34px;
           height: 34px;
+        }
+
+        .audio-prompt {
+          gap: 8px;
+          padding: 8px 10px;
+        }
+
+        .audio-status {
+          font-size: 0.8rem;
         }
       }
     </style>
@@ -212,7 +236,8 @@
     </video>
     <audio id="bgMusic" preload="auto" loop playsinline></audio>
     <div class="audio-prompt" id="audioPrompt">
-      <button id="audioPromptBtn">Aktifkan musik latar</button>
+      <button id="audioPromptBtn" type="button">Putar musik</button>
+      <span class="audio-status" id="audioStatus" role="status" aria-live="polite">Menyiapkan musik...</span>
     </div>
     <div class="video-overlay"></div>
     <div class="bubble-layer" id="bubbleLayer"></div>
@@ -222,13 +247,13 @@
         { type: "text", content: "happy birthday sayangku" },
         {
           type: "image",
-          src: "file:///C:/Users/ASUS/Downloads/WhatsApp Image 2026-08-08 at 03.34.33.jpeg",
+          src: "assets/foto-momen-1.jpeg",
           label: "hfiz akan selamanya mencintai wawa",
         },
         { type: "text", content: "mwah" },
         {
           type: "image",
-          src: "file:///C:/Users/ASUS/Downloads/WhatsApp Image 2026-08-08 at 03.34.33.jpeg",
+          src: "assets/foto-momen-1.jpeg",
           label: "selamanya untuk wawa",
         },
       ];
@@ -255,13 +280,12 @@
 
         const side = Math.random() > 0.5 ? "left" : "right";
         bubble.classList.add(side);
-        bubble.style.left = side === "left" ? `${Math.random() * 35 + 2}%` : `${Math.random() * 35 + 58}%`;
+        bubble.style.setProperty("--bubble-x", side === "left" ? `${Math.random() * 35 + 2}%` : `${Math.random() * 35 + 58}%`);
         bubble.style.animationDuration = `${10 + Math.random() * 7}s`;
         bubble.style.animationDelay = `${-Math.random() * 12}s`;
         bubble.style.fontSize = `${0.9 + Math.random() * 0.3}rem`;
         bubble.addEventListener("click", (event) => {
           event.stopPropagation();
-          playBackgroundAudio();
           const rect = bubble.getBoundingClientRect();
           const pop = document.createElement("span");
           pop.className = "pop-heart";
@@ -283,11 +307,8 @@
 
       const pageVideo = document.getElementById("pageVideo");
       const bgMusic = document.getElementById("bgMusic");
-      const audioPrompt = document.getElementById("audioPrompt");
       const audioPromptBtn = document.getElementById("audioPromptBtn");
-      let audioStarted = false;
-      let audioContext = null;
-      let ambientInterval = null;
+      const audioStatus = document.getElementById("audioStatus");
 
       if (bgMusic) {
         bgMusic.src = "WhatsApp Video 2026-08-08 at 03.42.05.mp4";
@@ -295,25 +316,26 @@
         bgMusic.volume = 0.75;
       }
 
+      function updateAudioControl(isPlaying, status) {
+        if (audioPromptBtn) {
+          audioPromptBtn.textContent = isPlaying ? "Matikan musik" : "Putar musik";
+        }
+        if (audioStatus) {
+          audioStatus.textContent = status;
+        }
+      }
+
       function playBackgroundAudio() {
-        if (audioStarted || !bgMusic) return;
-
-        const AudioCtor = window.AudioContext || window.webkitAudioContext;
-        if (AudioCtor && !audioContext) {
-          audioContext = new AudioCtor();
-        }
-
-        if (audioContext && audioContext.state === "suspended") {
-          audioContext.resume().catch(() => {});
-        }
-
-        bgMusic.currentTime = 0;
+        if (!bgMusic) return;
         bgMusic.play().then(() => {
-          audioStarted = true;
-          if (audioPrompt) audioPrompt.classList.remove("show");
-        }).catch(() => {
-          audioStarted = false;
-          if (audioPrompt) audioPrompt.classList.add("show");
+          updateAudioControl(true, "Musik sedang diputar");
+        }).catch((error) => {
+          updateAudioControl(false, error.name === "NotAllowedError"
+            ? "Tekan tombol untuk memutar musik"
+            : "Musik gagal diputar. Coba tekan tombol lagi.");
+          if (error.name !== "NotAllowedError") {
+            console.error("Gagal memutar musik latar:", error);
+          }
         });
       }
 
@@ -321,7 +343,9 @@
         if (!pageVideo) return;
         pageVideo.muted = true;
         pageVideo.volume = 0;
-        pageVideo.play().catch(() => {});
+        pageVideo.play().catch((error) => {
+          console.error("Gagal memutar video latar:", error);
+        });
       }
 
       window.addEventListener("DOMContentLoaded", () => {
@@ -329,10 +353,12 @@
           window.location.href = "galeri.html";
         }, 14000);
 
+        updateAudioControl(false, "Tekan tombol untuk memutar musik");
         playBackgroundAudio();
         ensureVideoAudio();
 
-        spawnBubbles(24);
+        const isMobile = window.matchMedia("(max-width: 768px)").matches;
+        spawnBubbles(isMobile ? 12 : 24);
         setInterval(() => {
           const item = bubbleItems[Math.floor(Math.random() * bubbleItems.length)];
           createBubble(item);
@@ -344,7 +370,12 @@
 
       if (audioPromptBtn) {
         audioPromptBtn.addEventListener("click", () => {
-          playBackgroundAudio();
+          if (bgMusic && !bgMusic.paused) {
+            bgMusic.pause();
+            updateAudioControl(false, "Musik dijeda");
+          } else {
+            playBackgroundAudio();
+          }
         });
       }
     </script>
