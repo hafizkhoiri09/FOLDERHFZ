@@ -29,6 +29,31 @@
         isolation: isolate;
       }
 
+      .gallery-link {
+        position: fixed;
+        z-index: 2;
+        bottom: max(18px, env(safe-area-inset-bottom));
+        left: 50%;
+        padding: 11px 22px;
+        border: 1px solid rgba(255, 55, 80, 0.8);
+        border-radius: 999px;
+        background: rgba(15, 0, 3, 0.9);
+        box-shadow: 0 0 12px rgba(255, 20, 50, 0.45);
+        color: #ff5268;
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-decoration: none;
+        transform: translateX(-50%);
+        transition: background 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+      }
+
+      .gallery-link:hover,
+      .gallery-link:focus-visible {
+        background: #290008;
+        box-shadow: 0 0 20px rgba(255, 20, 50, 0.75);
+        color: #fff;
+      }
+
       .love-heart {
         display: block;
         width: min(100%, 480px);
@@ -162,6 +187,7 @@
           <g id="heartText" clip-path="url(#heartClip)"></g>
         </svg>
       </div>
+      <a class="gallery-link" href="galeri.html">lanjut ke galeri <span aria-hidden="true">→</span></a>
     </main>
     <script>
       const phrase = "i love u nazzwa azzahra  ♥  ";
@@ -185,6 +211,14 @@
         text.style.setProperty("--near-y", `${index % 2 === 0 ? -5 : 5}px`);
         text.textContent = phrase.repeat(5);
         heartText.appendChild(text);
+
+        if (index === 31) {
+          text.addEventListener("animationend", () => {
+            window.setTimeout(() => {
+              window.location.href = "galeri.html";
+            }, 1800);
+          }, { once: true });
+        }
       }
 
       for (let index = 0; index < 42; index += 1) {
