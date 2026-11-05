@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>I Love U Nazwa Azzahra</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .message-body {
+        min-height: 100vh;
+        background: #000;
+        color: #ff263f;
+      }
+
+      .message-page {
+        min-height: 100vh;
+        padding: 18px;
+        overflow: hidden;
+        background:
+          radial-gradient(ellipse at center, rgba(80, 0, 12, 0.2), transparent 58%),
+          #000;
+      }
+
+      .heart-stage {
+        position: relative;
+        display: grid;
+        width: min(100%, 560px);
+        place-items: center;
+        isolation: isolate;
+      }
+
+      .love-heart {
+        display: block;
+        width: min(100%, 480px);
+        max-height: 88vh;
+        overflow: visible;
+      }
+
+      .heart-outline {
+        fill: rgba(255, 20, 45, 0.025);
+        stroke: #ff203b;
+        stroke-width: 1.4;
+        stroke-linejoin: round;
+        filter: drop-shadow(0 0 4px #ff1738) drop-shadow(0 0 13px rgba(255, 0, 35, 0.9));
+        animation: heart-pulse 2.4s ease-in-out infinite alternate;
+      }
+
+      .heart-text {
+        fill: #ff344d;
+        font-family: "Segoe UI", Arial, sans-serif;
+        font-size: 6.2px;
+        font-weight: 700;
+        letter-spacing: 0.12px;
+        opacity: 0;
+        filter: drop-shadow(0 0 3px rgba(255, 15, 42, 0.95));
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: text-fly-in 2.8s cubic-bezier(0.18, 0.76, 0.24, 1) var(--delay) both;
+      }
+
+      .particle-field {
+        position: absolute;
+        z-index: -1;
+        inset: -12%;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      .particle {
+        position: absolute;
+        left: var(--x);
+        top: var(--y);
+        width: var(--size);
+        height: var(--size);
+        border-radius: 50%;
+        background: #ff2945;
+        box-shadow: 0 0 7px 2px rgba(255, 20, 55, 0.7);
+        opacity: 0;
+        animation: particle-drift var(--duration) ease-in-out var(--delay) infinite;
+      }
+
+      @keyframes text-fly-in {
+        0% {
+          opacity: 0;
+          transform: translate(var(--from-x), var(--from-y)) rotate(28deg) scale(0.7);
+        }
+        65% {
+          opacity: 1;
+          transform: translate(var(--near-x), var(--near-y)) rotate(-4deg) scale(1.05);
+        }
+        84% {
+          transform: translate(-2px, 2px) rotate(2deg) scale(0.98);
+        }
+        100% {
+          opacity: 1;
+          transform: translate(0, 0) rotate(0) scale(1);
+        }
+      }
+
+      @keyframes heart-pulse {
+        from {
+          opacity: 0.72;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes particle-drift {
+        0% {
+          opacity: 0;
+          transform: translate3d(0, 18px, 0) scale(0.5);
+        }
+        30% {
+          opacity: 0.8;
+        }
+        100% {
+          opacity: 0;
+          transform: translate3d(var(--drift), -70px, 0) scale(1.15);
+        }
+      }
+
+      @media (max-width: 480px) {
+        .message-page {
+          padding: 12px;
+        }
+
+        .heart-text {
+          font-size: 6px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .heart-outline {
+          animation: none;
+        }
+
+        .heart-text {
+          opacity: 1;
+          animation: none;
+        }
+
+        .particle-field {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body class="message-body">
+    <main class="page message-page">
+      <div class="heart-stage">
+        <div class="particle-field" id="particleField" aria-hidden="true"></div>
+        <svg class="love-heart" viewBox="0 0 300 270" role="img" aria-labelledby="heartTitle">
+          <title id="heartTitle">Tulisan I love u nazzwa azzahra berkumpul memenuhi bentuk hati</title>
+          <defs>
+            <path id="heartShape" d="M150 250 C132 235 18 157 18 91 C18 53 46 25 86 25 C116 25 139 42 150 70 C161 42 184 25 214 25 C254 25 282 53 282 91 C282 157 168 235 150 250 Z" />
+            <clipPath id="heartClip">
+              <use href="#heartShape" />
+            </clipPath>
+          </defs>
+          <use class="heart-outline" href="#heartShape" />
+          <g id="heartText" clip-path="url(#heartClip)"></g>
+        </svg>
+      </div>
+    </main>
+    <script>
+      const phrase = "i love u nazzwa azzahra  ♥  ";
+      const heartText = document.getElementById("heartText");
+      const particleField = document.getElementById("particleField");
+      const svgNamespace = "http://www.w3.org/2000/svg";
+
+      for (let index = 0; index < 32; index += 1) {
+        const text = document.createElementNS(svgNamespace, "text");
+        const y = 39 + index * 6.2;
+        const direction = index % 2 === 0 ? -1 : 1;
+
+        text.setAttribute("class", "heart-text");
+        text.setAttribute("x", "150");
+        text.setAttribute("y", y.toFixed(1));
+        text.setAttribute("text-anchor", "middle");
+        text.style.setProperty("--delay", `${index * 0.13}s`);
+        text.style.setProperty("--from-x", `${direction * (130 + (index % 4) * 18)}px`);
+        text.style.setProperty("--from-y", `${index % 3 === 0 ? -115 : 105}px`);
+        text.style.setProperty("--near-x", `${direction * 12}px`);
+        text.style.setProperty("--near-y", `${index % 2 === 0 ? -5 : 5}px`);
+        text.textContent = phrase.repeat(5);
+        heartText.appendChild(text);
+      }
+
+      for (let index = 0; index < 42; index += 1) {
+        const particle = document.createElement("span");
+        particle.className = "particle";
+        particle.style.setProperty("--x", `${Math.random() * 100}%`);
+        particle.style.setProperty("--y", `${Math.random() * 100}%`);
+        particle.style.setProperty("--size", `${1 + Math.random() * 2}px`);
+        particle.style.setProperty("--duration", `${3 + Math.random() * 4}s`);
+        particle.style.setProperty("--delay", `${-Math.random() * 6}s`);
+        particle.style.setProperty("--drift", `${Math.random() * 50 - 25}px`);
+        particleField.appendChild(particle);
+      }
+    </script>
+  </body>
+</html>
